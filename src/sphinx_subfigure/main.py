@@ -2,21 +2,32 @@ from __future__ import annotations
 
 import math
 import string
+from typing import TYPE_CHECKING
 
 from docutils import nodes
 from docutils.parsers.rst import directives
 from sphinx.application import Sphinx
 from sphinx.util.docutils import SphinxDirective
 
+from . import __version__
 from .tr_html import setup_html
 from .tr_latex import setup_latex
 
+if TYPE_CHECKING:
+    from typing import Any
 
-def setup(app: Sphinx) -> None:
+
+def setup(app: Sphinx) -> dict[str, Any]:
     """Setup the extension."""
     app.add_directive("subfigure", SubfigureDirective)
     setup_html(app)
     setup_latex(app)
+
+    return {
+        'version': __version__,
+        'parallel_read_safe': True,
+        'parallel_write_safe': True,
+    }
 
 
 class SubfigureDirective(SphinxDirective):
